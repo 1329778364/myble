@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+    <Button
+        android:id="@+id/start_ble"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="开启扫描" />
+
+    <Button
+    android:id="@+id/advertise_ble"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_below="@id/start_ble"
+    android:text="开始广播" />
+
+    <Button
+        android:id="@+id/connect_ble"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/advertise_ble"
+        android:text="连接低功耗设备" />
+
+
+    <Button
+        android:id="@+id/disconnect_ble"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/connect_ble"
+        android:text="断开连接" />
+
+</RelativeLayout>
