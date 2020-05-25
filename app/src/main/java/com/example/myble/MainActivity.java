@@ -34,12 +34,16 @@ import android.os.ParcelUuid;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import com.example.myble.bluetooth.AdvertiseService;
+import com.example.myble.bluetooth.ScanService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,7 +57,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean scanStart;
     private Button scanButton;
     private BluetoothLeScanner bluetoothLeScanner;
-    private ScanSettings scanSettings;
     private String TAG = "myBLE";
 
     private String bleAddress;
@@ -62,9 +65,6 @@ public class MainActivity extends AppCompatActivity {
     private boolean isAdvertised = false;
 
     private List<String> addressList; /*地址列表*/
-
-    /*扫描的设备列表*/
-    private ArrayList<ScanResult> mScanResultList;
 
     /*---------------------------------广播参数设置--------------------------------------------*/
     private final String AdvName = "Con";  /*名字长度不能超过3 否则报 数据过长的错误*/
@@ -79,9 +79,9 @@ public class MainActivity extends AppCompatActivity {
     /*广播时service 携带的数据*/
     private static byte[] send_data = {0x01};
 
-    /* 往charismatic write写数据  本机唯一 ID */
+    /* 往charismatic write写数据 本机唯一 ID */
     private static byte[] return_DATA = "232413".getBytes(); /* 会被转为10进制数组 */
-    /*设置char数据*/
+    /* 设置char数据 */
     private static byte[] charistic_DATA = "12324".getBytes(); /* 会被转为10进制数组 */
 
 
@@ -113,6 +113,8 @@ public class MainActivity extends AppCompatActivity {
 
     /* 获取到的指定Characteristic实体*/
     private BluetoothGattCharacteristic bluetoothGattCharacteristic;
+    private ScanSettings scanSettings;
+    private TextView text_view_device;
 
     @SuppressLint("ShowToast")
     @Override
@@ -120,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         requestPermission();
-        BluetoothUtils Utils = new BluetoothUtils();
 
         toast = Toast.makeText(this, "", Toast.LENGTH_LONG);
         bluetoothManager = (BluetoothManager) getSystemService(Context.BLUETOOTH_SERVICE);
@@ -141,6 +142,9 @@ public class MainActivity extends AppCompatActivity {
             showToast("支持BLE");
         }
 
+        final Intent scanIntent = new Intent(MainActivity.this, ScanService.class);
+        final Intent advertiseIntent = new Intent(MainActivity.this, AdvertiseService.class);
+
         scanStart = false;
         scanButton = this.<Button>findViewById(R.id.start_ble);
         scanButton.setOnClickListener(new View.OnClickListener() {
@@ -150,13 +154,15 @@ public class MainActivity extends AppCompatActivity {
                     scanButton.setText("停止扫描");
                     scanStart = true;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        scan(true);
+//                        scan(true);
+                        startService(scanIntent);
                     }
                 } else {
                     scanButton.setText("开始扫描");
                     scanStart = false;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                        scan(false);
+//                        scan(false);
+                        stopService(scanIntent);
                     }
                 }
             }
@@ -168,11 +174,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (!isAdvertised) {
-                    startAdvertise();
+//                    startAdvertise();
+                    startService(advertiseIntent);
                     advertise_button.setText("停止广播");
                     isAdvertised = true;
                 } else {
-                    stopAdvertise();
+//                    stopAdvertise();
+                    stopService(advertiseIntent);
                     advertise_button.setText("开始广播");
                     isAdvertised = false;
                 }
@@ -204,6 +212,18 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(View v) {
                 mBluetoothGatt.disconnect();
                 mBluetoothGatt.close();
+            }
+        });
+
+        Button display_device_button = findViewById(R.id.display_device);
+        text_view_device = findViewById(R.id.text_view_device);
+        display_device_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+//                if (Constant.getScanDeviceAddressList().size() > 0) {
+//                    Log.i(TAG, String.format("检测到的目标设备：%s", Constant.getScanDeviceAddressList().toString()));
+//                }
+//                Log.i(TAG, String.format("其他设备：%s", Constant.getScanDeviceAddressList_other().toString()));
             }
         });
     }
