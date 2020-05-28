@@ -48,6 +48,7 @@ import com.example.myble.bluetooth.ScanService;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Timer;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
@@ -115,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
     private BluetoothGattCharacteristic bluetoothGattCharacteristic;
     private ScanSettings scanSettings;
     private TextView text_view_device;
+    
+    private int Time = 1000*10;//周期时间
+    private Timer timer = new Timer();
 
     @SuppressLint("ShowToast")
     @Override
@@ -157,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
 //                        scan(true);
                         startService(scanIntent);
                     }
+
                 } else {
                     scanButton.setText("开始扫描");
                     scanStart = false;
@@ -668,5 +673,35 @@ public class MainActivity extends AppCompatActivity {
                         new String[]{Manifest.permission.ACCESS_COARSE_LOCATION}, 0);
             }
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        Log.i(TAG, "onDestroy: ");
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        Log.i(TAG, "onPause: ");
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        Log.i(TAG, "onStop: ");
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Log.i(TAG, "onStart: ");
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.i(TAG, "onRestart: ");
     }
 }

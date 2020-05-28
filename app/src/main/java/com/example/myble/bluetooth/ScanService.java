@@ -14,7 +14,9 @@ import android.bluetooth.BluetoothManager;
 import android.bluetooth.BluetoothProfile;
 import android.bluetooth.le.BluetoothLeScanner;
 import android.bluetooth.le.ScanCallback;
+import android.bluetooth.le.ScanFilter;
 import android.bluetooth.le.ScanResult;
+import android.bluetooth.le.ScanSettings;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
@@ -28,10 +30,13 @@ import androidx.annotation.Nullable;
 
 import com.example.myble.Constant;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ScanService extends Service {
     private Toast toast;
@@ -58,6 +63,13 @@ public class ScanService extends Service {
 
 //    private List<String> addressList ; /*地址列表*/
     private List<String> addressList = new LinkedList<>();
+    private ScanSettings scanSettings;
+    private List<ScanFilter> filters;
+
+    private int Time = 1000*10;//周期时间
+    private Timer timer = new Timer();
+    private boolean scanStart = false;
+
     @SuppressLint("ShowToast")
     @Override
     public void onCreate() {
@@ -79,12 +91,30 @@ public class ScanService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "onStartCommand:开始扫描服务");
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            Log.i(TAG, "3s后开始扫描");
-            new Handler().postDelayed(new Runnable(){
+//            Log.i(TAG, "1s后开始扫描");
+//            new Handler().postDelayed(new Runnable(){
+//                public void run() {
+//                    startScan();
+//                }
+//            }, 1000);
+
+            TimerTask timerTask = new TimerTask() {
+                @Override
                 public void run() {
-                    startScan();
+                    if (!scanStart) {
+                        startScan();
+                        Log.i(TAG, "run: 开启扫描");
+                        scanStart = true;
+                    } else {
+                        stopScan();
+                        scanStart = false;
+                        Log.i(TAG, "run: 关闭扫描");
+                    }
                 }
-            }, 1000);
+            };
+            timer.schedule(timerTask,
+                    1000,//延迟1秒执行
+                    Time);
         }
         return super.onStartCommand(intent, flags, startId);
     }
@@ -117,7 +147,7 @@ public class ScanService extends Service {
                         if (!addressList.contains(bleAddress)) {
                             addressList.add(bleAddress);
                             Log.i(TAG, "onScanResult: 第一次连接");
-                            connectBLE(bleAddress);
+//                            connectBLE(bleAddress);
                         }
                         // TODO 在这里对扫描到的数据 进行处理
                         Log.i(TAG, " 目标设备 Name: " + bluetoothDevice.getName() +" " + bluetoothDevice.getAddress() +
@@ -324,18 +354,20 @@ public class ScanService extends Service {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             /*api 21 以上的扫描方式*/
             bluetoothLeScanner = bluetoothAdapter.getBluetoothLeScanner();
-//            ScanSettings scanSettings;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-/*                scanSettings = new ScanSettings.Builder()
+                scanSettings = new ScanSettings.Builder()
                         .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
                         .setCallbackType(ScanSettings.CALLBACK_TYPE_ALL_MATCHES)
                         .setMatchMode(ScanSettings.MATCH_MODE_STICKY)
-                        .setReportDelay(10000).build();
-                List<ScanFilter> filters = new ArrayList<>();
-                ScanFilter filter = new ScanFilter.Builder().setServiceUuid(Constant.PARCEL_UUID_1).build();
-                filters.add(filter);*/
-                bluetoothLeScanner.startScan(scanCallback);
+                        .build();
+                filters = new ArrayList<>();
+                ScanFilter filter = new ScanFilter.Builder().setServiceUuid(Constant.PARCEL_UUID_1, Constant.parcelUuidMask).build();
+                filters.add(filter);
+                Log.i(TAG, "startScan: >= 23 api ");
+                bluetoothLeScanner.startScan(filters, scanSettings, scanCallback);
+//                bluetoothLeScanner.startScan(scanCallback);
             } else {
+                Log.i(TAG, "startScan: 小于23 的scanCallback");
 /*                scanSettings = new ScanSettings.Builder()
                         .setScanMode(ScanSettings.SCAN_MODE_BALANCED)
                         .setReportDelay(10000).build();*/

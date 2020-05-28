@@ -11,6 +11,8 @@ public class Constant {
 
     /*--------------- 广播参数设置 -------------------------*/
     public static final ParcelUuid PARCEL_UUID_1 = ParcelUuid.fromString("0000ccc0-0000-1000-8000-00805f9b34fb");
+    public static final ParcelUuid parcelUuidMask = ParcelUuid.fromString("FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF");
+
     public static final UUID SERVICE_UUID_1 = UUID.fromString("0000ccc0-0000-1000-8000-00805f9b34fb");
     public static final UUID CHARACTERISTIC_UUID_1 = UUID.fromString("0000ccc1-0000-1000-8000-00805f9b34fb");
     /*用于通知 notify的专属ID*/
