@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.CompoundButton;
 import android.widget.Switch;
-import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -23,7 +22,6 @@ import com.example.myble.viewmodel.WordViewModel;
 import java.util.List;
 
 public class show_result_activity extends AppCompatActivity {
-    TextView textView ;
     ActivityShowResultBinding binding;
     private WordViewModel wordViewModel;
 
@@ -34,16 +32,22 @@ public class show_result_activity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        /* 绑定ViewModel */
         binding = DataBindingUtil.setContentView(this, R.layout.activity_show_result);
         wordViewModel = new ViewModelProvider(this).get(WordViewModel.class);
         binding.setLifecycleOwner(this);
 
+        /* 实现循环列表 adapter 提供数据给list */
         recyclerView = findViewById(R.id.recyclerView);
-        myAdapter1 = new MyAdapter(false);
-        myAdapter2 = new MyAdapter(true);
+        myAdapter1 = new MyAdapter(false, wordViewModel);
+        myAdapter2 = new MyAdapter(true, wordViewModel);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         aSwitch = findViewById(R.id.switch1);
+
+        /* 显示默认 adapter */
+        recyclerView.setAdapter(myAdapter1);
+        /* 根据switch显示list*/
         aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -55,6 +59,7 @@ public class show_result_activity extends AppCompatActivity {
             }
         });
 
+        /* 检测到数据更新 渲染到界面 */
         wordViewModel.getAllWordsLive().observe(this, new Observer<List<Word>>() {
             @Override
             public void onChanged(List<Word> words) {
@@ -64,6 +69,8 @@ public class show_result_activity extends AppCompatActivity {
                 myAdapter2.notifyDataSetChanged();
             }
         });
+
+        /* 往Model中添加数据 */
         findViewById(R.id.insert).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -15,6 +15,9 @@ public class Word {
     @ColumnInfo(name = "chineseMeaning")
     private String chineseMeaning;
 
+    @ColumnInfo(name = "chinese_invisible")
+    public Boolean chinese_invisible = true;
+
     public Word(String word, String chineseMeaning) {
         this.word = word;
         this.chineseMeaning = chineseMeaning;
@@ -42,5 +45,13 @@ public class Word {
 
     public void setChineseMeaning(String chineseMeaning) {
         this.chineseMeaning = chineseMeaning;
+    }
+
+    public Boolean getChinese_invisible() {
+        return chinese_invisible;
+    }
+
+    public void setChinese_invisible(Boolean chinese_invisible) {
+        this.chinese_invisible = chinese_invisible;
     }
 }
