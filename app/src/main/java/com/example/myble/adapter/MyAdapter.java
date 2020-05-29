@@ -29,15 +29,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.MyViewHolder> {
     @Override
     public MyViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-//        View itemView = layoutInflater.inflate(R.layout.cell_normal, parent, false);
-//        return new MyViewHolder(itemView);
-        return null;
+        View itemView = layoutInflater.inflate(R.layout.cell_card , parent, false);
+        return new MyViewHolder(itemView);
+//        return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
         Word word = allWords.get(position);
-        holder.textViewNumber.setText(String.valueOf(word.getId()));
+        holder.textViewNumber.setText(String.valueOf(position + 1));
         holder.textViewEnglish.setText(word.getWord());
         holder.textViewChinese.setText(word.getChineseMeaning());
     }
