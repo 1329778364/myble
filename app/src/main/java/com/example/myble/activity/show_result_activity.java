@@ -2,6 +2,8 @@ package com.example.myble.activity;
 
 import android.os.Bundle;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -26,8 +28,9 @@ public class show_result_activity extends AppCompatActivity {
     private WordViewModel wordViewModel;
 
     RecyclerView recyclerView;
-    MyAdapter myAdapter;
+    MyAdapter myAdapter1, myAdapter2 ;
 
+    Switch aSwitch;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,15 +39,29 @@ public class show_result_activity extends AppCompatActivity {
         binding.setLifecycleOwner(this);
 
         recyclerView = findViewById(R.id.recyclerView);
-        myAdapter = new MyAdapter();
+        myAdapter1 = new MyAdapter(false);
+        myAdapter2 = new MyAdapter(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(myAdapter);
+
+        aSwitch = findViewById(R.id.switch1);
+        aSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if (isChecked) {
+                    recyclerView.setAdapter(myAdapter2);
+                } else {
+                    recyclerView.setAdapter(myAdapter1);
+                }
+            }
+        });
 
         wordViewModel.getAllWordsLive().observe(this, new Observer<List<Word>>() {
             @Override
             public void onChanged(List<Word> words) {
-                myAdapter.setAllWords(words);
-                myAdapter.notifyDataSetChanged();
+                myAdapter1.setAllWords(words);
+                myAdapter2.setAllWords(words);
+                myAdapter1.notifyDataSetChanged();
+                myAdapter2.notifyDataSetChanged();
             }
         });
         findViewById(R.id.insert).setOnClickListener(new View.OnClickListener() {
