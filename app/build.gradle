@@ -22,6 +22,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    dataBinding{
+        //noinspection DataBindingWithoutKapt
+        enabled = true
+    }
 
 }
 
@@ -35,6 +39,15 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 //    implementation "androidx.core:core-ktx:+"
 //    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0'
+    implementation "androidx.lifecycle:lifecycle-viewmodel:2.2.0"
+    implementation 'androidx.recyclerview:recyclerview:1.1.0'
+
+    def room_version = "2.2.3"
+    //noinspection GradleDependency
+    implementation "androidx.room:room-runtime:$room_version"
+    annotationProcessor "androidx.room:room-compiler:$room_version" // For Kotlin use kapt instead of annotationProcessor
+    testImplementation "androidx.room:room-testing:$room_version"
 }
 repositories {
     mavenCentral()
