@@ -6,8 +6,8 @@
     <data>
         <variable
             name="Model"
-            type="MyViewModel" />
-        <import type="com.example.myble.viewmodel.MyViewModel" />
+            type="com.example.myble.viewmodel.DataBindingShPViewModel" />
+        <import type="com.example.myble.viewmodel.DataBindingShPViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -4,6 +4,9 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -28,10 +31,23 @@ public class create_cyclerview_activity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_cycleview_activity);
+
+        binding = DataBindingUtil.setContentView(this, R.layout.create_cycleview_activity);
+        devicesViweModel = new ViewModelProvider(this).get(DevicesViweModel.class);
+        binding.setData(devicesViweModel);
+        binding.setLifecycleOwner(this);
 
         initData();
+
         initView();
+
+        devicesViweModel.getDevices().observe(this, new Observer<List<BleDevice>>() {
+            @Override
+            public void onChanged(List<BleDevice> bleDevices) {
+                testAdapter = new TestAdapter(bleDevices);
+                testAdapter.notifyDataSetChanged();
+            }
+        });
 
     }
 
@@ -48,7 +64,8 @@ public class create_cyclerview_activity extends AppCompatActivity {
     public void initView() {
         recyclerView = findViewById(R.id.recyclerView_test);
         testAdapter = new TestAdapter(mdataList);
-        testAdapter.setHasStableIds(true);
+
+//        testAdapter.setHasStableIds(true);
         recyclerView.setAdapter(testAdapter);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
     }

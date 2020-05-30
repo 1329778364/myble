@@ -19,7 +19,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.show_result_activity">
+        <activity android:name=".activity.create_cyclerview_activity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

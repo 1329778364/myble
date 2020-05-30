@@ -28,7 +28,7 @@ public class TestAdapter extends Adapter<TestAdapter.MyViewHolder> {
         this.mDataList = mDataList;
     }
 
-        public void setmDataList(List<BleDevice> mDataList) {
+    public void setmDataList(List<BleDevice> mDataList) {
         this.mDataList = mDataList;
     }
 
@@ -57,7 +57,7 @@ public class TestAdapter extends Adapter<TestAdapter.MyViewHolder> {
         } else {
             holder.connected.setChecked(false);
         }
-// TODO 重复显示 影响没有解决
+        // TODO 重复显示 影响没有解决
         holder.connected.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
